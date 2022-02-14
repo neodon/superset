@@ -21,18 +21,6 @@ services:
     mem_reservation: 256m
     mem_limit: 512m
 
-  db:
-    env_file: docker/.env-non-dev
-    image: postgres:10
-    container_name: superset_postgres
-    restart: unless-stopped
-    networks:
-      rl:
-    volumes:
-      - db_home:/var/lib/postgresql/data
-    mem_reservation: 256m
-    mem_limit: 512m
-
   superset:
     env_file: docker/.env-non-dev
     image: *superset-image
@@ -44,6 +32,8 @@ services:
       rl:
     depends_on: *superset-depends-on
     volumes: *superset-volumes
+    environment:
+      DATABASE_PASSWORD: ${RL_SERVER1_POSTGRES_ROOT_PASSWORD:?}
     mem_reservation: 256m
     mem_limit: 512m
 
@@ -57,6 +47,8 @@ services:
     networks:
       rl:
     volumes: *superset-volumes
+    environment:
+      DATABASE_PASSWORD: ${RL_SERVER1_POSTGRES_ROOT_PASSWORD:?}
 
   superset-worker:
     image: *superset-image
@@ -69,6 +61,8 @@ services:
     networks:
       rl:
     volumes: *superset-volumes
+    environment:
+      DATABASE_PASSWORD: ${RL_SERVER1_POSTGRES_ROOT_PASSWORD:?}
     mem_reservation: 1g
     mem_limit: 4g
 
@@ -83,6 +77,8 @@ services:
     networks:
       rl:
     volumes: *superset-volumes
+    environment:
+      DATABASE_PASSWORD: ${RL_SERVER1_POSTGRES_ROOT_PASSWORD:?}
     mem_reservation: 256m
     mem_limit: 512m
 
